@@ -17,8 +17,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    env:
-      IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ matrix.image }}:${{ github.ref.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,7 +25,9 @@ jobs:
           submodules: true
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY -u $ --password-stdin
-      - name: Build
-        run: docker build --tag $IMAGE_TAG -f ${{ matrix.image }}.dockerfile .
       - name: Publish
-        run: docker push $IMAGE_TAG
+        env:
+          IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ matrix.image }}:${{ github.ref.name }}
+        run: |
+          docker build --tag $IMAGE_TAG -f ${{ matrix.image }}.dockerfile .
+          docker push $IMAGE_TAG

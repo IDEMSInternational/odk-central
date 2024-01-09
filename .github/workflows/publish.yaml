@@ -6,12 +6,13 @@ env:
   OWNER: idemsinternational
 jobs:
   publish:
-    matrix:
-      image:
-        - enketo
-        - nginx
-        - secrets
-        - service
+    strategy:
+      matrix:
+        image:
+          - enketo
+          - nginx
+          - secrets
+          - service
     runs-on: ubuntu-latest
     permissions:
       contents: read

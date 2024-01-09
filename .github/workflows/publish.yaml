@@ -1,0 +1,31 @@
+name: Publish container images
+on:
+  workflow_dispatch:
+env:
+  REGISTRY: ${{ vars.CONTAINER_REGISTRY }}
+jobs:
+  publish:
+    matrix:
+      image:
+        - enketo
+        - nginx
+        - secrets
+        - service
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE_TAG: $REGISTRY/${{ matrix.image }}:${{ github.ref.name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY -u $ --password-stdin
+      - name: Build
+        run: docker build --tag $IMAGE_TAG -f ${{ matrix.image }}.dockerfile
+      - name: Publish
+        run: docker push $IMAGE_TAG

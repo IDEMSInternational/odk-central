@@ -18,7 +18,7 @@ jobs:
       contents: read
       packages: write
     env:
-      IMAGE_TAG: $REGISTRY/$OWNER/${{ matrix.image }}:$GITHUB_REF_NAME
+      IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ matrix.image }}:${{ github.ref.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

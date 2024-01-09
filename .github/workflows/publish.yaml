@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
 env:
   REGISTRY: ${{ vars.CONTAINER_REGISTRY }}
+  OWNER: idemsinternational
 jobs:
   publish:
     matrix:
@@ -16,7 +17,7 @@ jobs:
       contents: read
       packages: write
     env:
-      IMAGE_TAG: $REGISTRY/${{ matrix.image }}:${{ github.ref.name }}
+      IMAGE_TAG: $REGISTRY/$OWNER/${{ matrix.image }}:${{ github.ref.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
